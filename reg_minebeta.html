@@ -75,36 +75,38 @@ z-index: 9999;
 <hr>
 <div class="text-box">
   <div class="text-box">
-<form action="https://formsubmit.co/nazarpivavarav@gmail.com" 
-      method="POST" 
-      enctype="multipart/form-data">
+<form action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
 
-  <label>Ваш нікнейм:</label><br>
-  <input type="text" name="nickname" placeholder="Введіть нікнейм" required><br><br>
+  <!-- Web3Forms key -->
+  <input type="hidden" name="access_key" value="c478594d-c86a-4c02-ab43-5cb8fe33f80c">
 
-  <label>Завантажте скін(лише в форматі PNG):</label><br>
-  <input type="file" name="file" accept=".png" required><br><br>
+  <!-- Нікнейм -->
+  <label>Нікнейм</label>
+  <input type="text" name="nickname" required placeholder="Ваш нік">
 
-  <label>Дозволяєте фіксування IP-адреси?</label><br>
-  <label><b style="color: red;">Фіксування IP-адреси захистить ваш аккаунт від інших людей, які входять в ваш аккаунт<br>
-ІР-адреса не передається іншим особам, ми не збираємо дані про вас</b>
-  </label><br>
-  <label>
-    <input type="radio" name="fix_ip" value="Так" required> Так
+  <!-- Email -->
+  <label>Email</label>
+  <input type="email" name="email" required placeholder="email@example.com">
+
+  <!-- Вибір PNG файлу -->
+  <label>Ваш скин (лише PNG)</label>
+  <input type="file" name="skin" accept="image/png" required>
+
+  <!-- Так/Ні вибір -->
+  <label>Фіксувати вашу IP адресу?<br>Це зроблено для захисту аккаунту від інших людей, дані не збіраємо та не передаємо іншим особам</label>
+  <select name="fix_ip" required>
+    <option value="">Оберіть...</option>
+    <option value="yes">Так</option>
+    <option value="no">Ні</option>
+  </select>
+
+  <!-- Погодження з правилами -->
+  <label style="display:flex; align-items:center; gap:6px;">
+    <input type="checkbox" name="agree" required>
+    Погоджуюсь з правилами проєкту
   </label>
-  <label>
-    <input type="radio" name="fix_ip" value="Ні" required> Ні
-  </label>
-  <br><br>
 
-  <input type="hidden" name="_subject" value="Заявка реєстрації">
-
-  <input type="hidden" name="_next" value="reg_minebeta.html">
-
-  <button type="submit" title="Приславши заявку на реєстрацію, ви автоматично погоджуєтесь з правилами проєкту">
-      Прислати заявку на реєстрацію
-  </button>
-
+  <button type="submit">Надіслати заявку</button>
 </form>
   </div>
 </div>
