@@ -75,39 +75,26 @@ z-index: 9999;
 <hr>
 <div class="text-box">
   <div class="text-box">
-<form action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
+<form id="registerForm">
+  <label>Нікнейм:</label>
+  <input type="text" name="nickname" required><br><br>
 
-  <!-- Web3Forms key -->
-  <input type="hidden" name="access_key" value="c478594d-c86a-4c02-ab43-5cb8fe33f80c">
+  <label>Email:</label>
+  <input type="email" name="email" required><br><br>
 
-  <!-- Нікнейм -->
-  <label><a title="Введіть свій нікнейм в Minecraft">Нікнейм</a></label>
-  <input type="text" name="nickname" required placeholder="Ваш нік">
-<br><br>
-  <!-- Email -->
-  <label><a title="Введіть свій Email">Email</a></label>
-  <input type="email" name="email" required placeholder="email@example.com">
-<br><br>
-  <!-- Вибір PNG файлу -->
-  <label><a title="Встановіть свій скін">Скін(лише PNG)</a></label>
-  <input type="file" name="skin" accept="image/png" required>
-<br><br>
-  <!-- Так/Ні вибір -->
-  <label><a title="Це для захисту вашого аккаунту від інших людей, ми не збираємо дані та не передаємо іншим особам">Фіксувати ІР-адресу?</a></label>
+  <label>Фіксація IP:</label>
   <select name="fix_ip" required>
     <option value="">Оберіть...</option>
-    <option value="yes">Так</option>
-    <option value="no">Ні</option>
-  </select>
-<br><br>
-  <!-- Погодження з правилами -->
-  <label style="display:flex; align-items:center; gap:6px;">
-    <input type="checkbox" name="agree" required>
-      Погоджуюсь з правилами проєкту
-  </label>
-<br>
-  <button type="submit">Надіслати заявку</button>
+    <option value="так">Так</option>
+    <option value="ні">Ні</option>
+  </select><br><br>
+
+  <label><input type="checkbox" name="agree" required> Погоджуюсь з правилами</label><br><br>
+
+  <button type="submit">Надіслати</button>
 </form>
+
+<div id="message" style="color:green; margin-top:10px;"></div>
   </div>
 </div>
 <footer>
@@ -129,3 +116,32 @@ z-index: 9999;
     100% { transform: translateY(100vh); }
 }
 </style>
+<script>
+    const form = document.getElementById('registerForm');
+const msg = document.getElementById('message');
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const data = new FormData(form);
+
+  // Формуємо JSON для Discord
+  const json = {
+    content: `Нова реєстрація!\nНікнейм: ${data.get('nickname')}\nEmail: ${data.get('email')}\nФіксація IP: ${data.get('fix_ip')}\nПогодження: ${data.get('agree')}`
+  };
+
+  fetch('https://discordapp.com/api/webhooks/1445367542163046414/GaGe1KMjoYvhH14fBQ_c8FqvireE7jzbAAX5NbjwUvsGmnOe36skSGzw7szGW8EVxQjW', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(json)
+  })
+  .then(() => {
+    msg.textContent = "Дані відправлено!";
+    form.reset(); // миттєве очищення форми
+  })
+  .catch(err => {
+    msg.textContent = "Помилка при відправці.";
+    console.error(err);
+  });
+});
+
+</script>
