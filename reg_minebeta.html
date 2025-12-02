@@ -79,6 +79,9 @@ z-index: 9999;
   <label>Нікнейм:</label>
   <input type="text" name="nickname" required><br><br>
 
+    <label>Скін (PNG):</label>
+  <input type="file" name="skin" accept="image/png" required><br><br>
+
   <label>Email:</label>
   <input type="email" name="email" required><br><br>
 
@@ -117,31 +120,55 @@ z-index: 9999;
 }
 </style>
 <script>
-    const form = document.getElementById('registerForm');
-const msg = document.getElementById('message');
+const WEBHOOK_URL = "https://discordapp.com/api/webhooks/1445367542163046414/GaGe1KMjoYvhH14fBQ_c8FqvireE7jzbAAX5NbjwUvsGmnOe36skSGzw7szGW8EVxQjW";
 
-form.addEventListener('submit', e => {
+const form = document.getElementById("registerForm");
+const msg = document.getElementById("msg");
+
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  // 🔒 Заборона повторної реєстрації
+  if (localStorage.getItem("registered") === "yes") {
+    msg.textContent = "Ви вже проходили реєстрацію!";
+    msg.style.color = "red";
+    return;
+  }
+
   const data = new FormData(form);
 
-  // Формуємо JSON для Discord
-  const json = {
-    content: `Нова реєстрація!\nНікнейм: ${data.get('nickname')}\nEmail: ${data.get('email')}\nФіксація IP: ${data.get('fix_ip')}\nПогодження: ${data.get('agree')}`
+  // Формуємо JSON текст
+  const payload = {
+    content: `Нова реєстрація:
+Нікнейм: ${data.get("nickname")}
+Email: ${data.get("email")}
+Фіксація IP: ${data.get("fix_ip")}
+Погодження: ${data.get("agree")}`
   };
 
-  fetch('https://discordapp.com/api/webhooks/1445367542163046414/GaGe1KMjoYvhH14fBQ_c8FqvireE7jzbAAX5NbjwUvsGmnOe36skSGzw7szGW8EVxQjW', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(json)
-  })
-  .then(() => {
-    msg.textContent = "Дані відправлено!";
-    form.reset(); // миттєве очищення форми
-  })
-  .catch(err => {
-    msg.textContent = "Помилка при відправці.";
-    console.error(err);
-  });
+  const fd = new FormData();
+  fd.append("payload_json", JSON.stringify(payload));
+  fd.append("file", data.get("skin")); // PNG файл
+
+  try {
+    await fetch(WEBHOOK_URL, {
+      method: "POST",
+      body: fd
+    });
+
+    // відображення результату
+    msg.textContent = "Реєстрація успішна!";
+    msg.style.color = "green";
+
+    // 🔒 Встановлюємо мітку "вже зареєстрований"
+    localStorage.setItem("registered", "yes");
+
+    form.reset();
+
+  } catch (err) {
+    msg.textContent = "Помилка при відправці!";
+    msg.style.color = "red";
+  }
 });
 
 </script>
